@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="560" viewBox="0 0 880 560" role="img" aria-labelledby="title desc">
+  <title id="title">How a question becomes an answer</title>
+  <desc id="desc">Claude Code, Claude.ai or MCP Inspector call the server over HTTPS. A gate checks host, origin, token and rate limit; the official MCP SDK speaks the protocol; register() opens a read-only database session and runs one of nine SQL tools; privacy.redact() hashes emails and phones, turns names into initials and drops addresses before the answer goes back. PostgreSQL is reached through a SELECT-only role.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#57606a"/>
+    </marker>
+    <style>
+      text { font-family: -apple-system, "Segoe UI", Helvetica, Arial, sans-serif; fill: #1f2328; }
+      .h { font-size: 15px; font-weight: 700; }
+      .s { font-size: 12.5px; fill: #424a53; }
+      .t { font-size: 13px; font-weight: 600; fill: #424a53; }
+      .n { font-size: 12px; font-weight: 700; fill: #ffffff; }
+      .line { stroke: #57606a; stroke-width: 1.6; fill: none; }
+    </style>
+  </defs>
+
+  <!-- Card: its own background, so it reads the same in light and dark mode -->
+  <rect x="0.5" y="0.5" width="879" height="559" rx="14" fill="#ffffff" stroke="#d0d7de"/>
+  <text x="28" y="38" class="h" style="font-size:17px">How a question becomes an answer</text>
+
+  <!-- Clients -->
+  <g>
+    <rect x="28" y="58" width="252" height="62" rx="10" fill="#ddf4ff" stroke="#54aeff"/>
+    <text x="44" y="84" class="h">Claude Code</text>
+    <text x="44" y="104" class="s">token in an Authorization header</text>
+
+    <rect x="314" y="58" width="252" height="62" rx="10" fill="#ddf4ff" stroke="#54aeff"/>
+    <text x="330" y="84" class="h">Claude.ai · Claude Desktop</text>
+    <text x="330" y="104" class="s">through a Cloudflare tunnel</text>
+
+    <rect x="600" y="58" width="252" height="62" rx="10" fill="#ddf4ff" stroke="#54aeff"/>
+    <text x="616" y="84" class="h">MCP Inspector</text>
+    <text x="616" y="104" class="s">calls the tools by hand, no AI</text>
+  </g>
+
+  <!-- Requests converge on the server -->
+  <path class="line" d="M154,120 V140 H440"/>
+  <path class="line" d="M726,120 V140 H440"/>
+  <path class="line" d="M440,120 V176" marker-end="url(#arrow)"/>
+  <rect x="452" y="146" width="128" height="22" rx="11" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="516" y="161" class="s" text-anchor="middle">HTTPS · JSON-RPC</text>
+
+  <!-- Server container -->
+  <rect x="28" y="180" width="824" height="196" rx="12" fill="#f6f8fa" stroke="#8c959f" stroke-dasharray="6 4"/>
+  <text x="44" y="204" class="t">Sales MCP server · FastAPI + official MCP Python SDK · runs in Docker</text>
+
+  <!-- Step 1: gate -->
+  <rect x="44" y="222" width="180" height="128" rx="10" fill="#fff8c5" stroke="#d4a72c"/>
+  <circle cx="64" cy="244" r="11" fill="#9a6700"/><text x="64" y="248" class="n" text-anchor="middle">1</text>
+  <text x="82" y="249" class="h">Gate</text>
+  <text x="58" y="276" class="s">Host and Origin check</text>
+  <text x="58" y="296" class="s">token: header or URL door</text>
+  <text x="58" y="316" class="s">rate limit per door</text>
+  <text x="58" y="336" class="s">wrong token → 401</text>
+
+  <!-- Step 2: SDK -->
+  <rect x="248" y="222" width="180" height="128" rx="10" fill="#fbefff" stroke="#c297ff"/>
+  <circle cx="268" cy="244" r="11" fill="#8250df"/><text x="268" y="248" class="n" text-anchor="middle">2</text>
+  <text x="286" y="249" class="h">MCP protocol</text>
+  <text x="262" y="276" class="s">official SDK</text>
+  <text x="262" y="296" class="s">2026-07-28 and the</text>
+  <text x="262" y="316" class="s">legacy handshake</text>
+  <text x="262" y="336" class="s">stateless, JSON replies</text>
+
+  <!-- Step 3: register -->
+  <rect x="452" y="222" width="180" height="128" rx="10" fill="#dafbe1" stroke="#4ac26b"/>
+  <circle cx="472" cy="244" r="11" fill="#1a7f37"/><text x="472" y="248" class="n" text-anchor="middle">3</text>
+  <text x="490" y="249" class="h">register()</text>
+  <text x="466" y="276" class="s">the only way in</text>
+  <text x="466" y="296" class="s">opens a read-only session</text>
+  <text x="466" y="316" class="s">runs 1 of 9 tools</text>
+  <text x="466" y="336" class="s">(plain SQL)</text>
+
+  <!-- Step 4: privacy -->
+  <rect x="656" y="222" width="180" height="128" rx="10" fill="#ffebe9" stroke="#ff8182"/>
+  <circle cx="676" cy="244" r="11" fill="#cf222e"/><text x="676" y="248" class="n" text-anchor="middle">4</text>
+  <text x="694" y="249" class="h">privacy.redact()</text>
+  <text x="670" y="276" class="s">emails, phones → hash</text>
+  <text x="670" y="296" class="s">names → initials</text>
+  <text x="670" y="316" class="s">addresses → dropped</text>
+  <text x="670" y="336" class="s">few people → "&lt; 5"</text>
+
+  <path class="line" d="M224,286 H246" marker-end="url(#arrow)"/>
+  <path class="line" d="M428,286 H450" marker-end="url(#arrow)"/>
+  <path class="line" d="M632,286 H654" marker-end="url(#arrow)"/>
+
+  <!-- Answer goes back -->
+  <path class="line" d="M836,250 H862 V89 H854" marker-end="url(#arrow)"/>
+  <text x="866" y="172" class="s" transform="rotate(90 866 172)" text-anchor="middle">answer</text>
+
+  <!-- Database -->
+  <path class="line" d="M542,350 V420" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+  <rect x="550" y="374" width="78" height="22" rx="11" fill="#f6f8fa" stroke="#d0d7de"/>
+  <text x="589" y="389" class="s" text-anchor="middle">SQL · rows</text>
+
+  <g>
+    <path d="M392,436 v80 a150,14 0 0 0 300,0 v-80" fill="#eef1f4" stroke="#8c959f"/>
+    <ellipse cx="542" cy="436" rx="150" ry="14" fill="#f6f8fa" stroke="#8c959f"/>
+    <text x="542" y="474" class="h" text-anchor="middle">PostgreSQL 16</text>
+    <text x="542" y="496" class="s" text-anchor="middle">SELECT-only role · read-only transactions</text>
+    <text x="542" y="515" class="s" text-anchor="middle">15-second statement timeout</text>
+  </g>
+
+  <!-- Demo data -->
+  <rect x="44" y="440" width="270" height="76" rx="10" fill="#ffffff" stroke="#8c959f"/>
+  <text x="60" y="466" class="h">Demo data</text>
+  <text x="60" y="486" class="s">240 days, synthetic, rebuilt on every</text>
+  <text x="60" y="504" class="s">start and anchored to today</text>
+  <path class="line" d="M314,478 H390" marker-end="url(#arrow)"/>
+</svg>

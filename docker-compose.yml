@@ -1,0 +1,100 @@
+# Local demo: Postgres + fresh demo data + the MCP server on 127.0.0.1:8000.
+#   python scripts/init_env.py                 # creates .env with random secrets
+#   docker compose up --build                  # local clients (Claude Code, Inspector)
+#   docker compose --profile tunnel up --build # + a public URL for Claude.ai
+# It ends by printing what to paste into each client (the `connect` service).
+# Every `up` rebuilds the demo data, anchored to today.
+
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: shop_admin
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: shop
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U shop_admin -d shop"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  setup:
+    build: .
+    command: ["sales-mcp", "setup", "--reset", "--seed"]
+    environment:
+      ADMIN_DATABASE_URL: postgresql://shop_admin:${POSTGRES_PASSWORD}@db:5432/shop
+      MCP_DB_PASSWORD: ${MCP_DB_PASSWORD:?Set MCP_DB_PASSWORD in .env}
+    depends_on:
+      db:
+        condition: service_healthy
+
+  server:
+    build: .
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      # The read-only role created by `setup`, never the admin one.
+      DATABASE_URL: postgresql://mcp_reader:${MCP_DB_PASSWORD}@db:5432/shop
+      MCP_ENABLED: "true"
+      MCP_TOKEN: ${MCP_TOKEN:?Set MCP_TOKEN in .env}
+      MCP_URL_TOKEN: ${MCP_URL_TOKEN:-}
+      MCP_URL_TOKEN_ENABLED: ${MCP_URL_TOKEN_ENABLED:-false}
+      MCP_ALLOWED_HOSTS: ${MCP_ALLOWED_HOSTS:-localhost:*,127.0.0.1:*,*.trycloudflare.com}
+      MCP_ALLOWED_ORIGINS: ${MCP_ALLOWED_ORIGINS:-http://localhost:*,http://127.0.0.1:*,https://claude.ai,https://claude.com}
+    depends_on:
+      setup:
+        condition: service_completed_successfully
+
+  # Prints what to paste into Claude Code, MCP Inspector and Claude.ai, then
+  # exits. See it again with: docker compose logs connect
+  connect:
+    build: .
+    command: ["sales-mcp", "connect-info", "--tunnel", "http://tunnel:2000"]
+    environment:
+      MCP_TOKEN: ${MCP_TOKEN}
+      MCP_URL_TOKEN: ${MCP_URL_TOKEN:-}
+      MCP_URL_TOKEN_ENABLED: ${MCP_URL_TOKEN_ENABLED:-false}
+    depends_on:
+      server:
+        condition: service_healthy
+      tunnel:
+        condition: service_started
+        required: false
+
+  # --- public URL (only with --profile tunnel) -----------------------------------
+  # A Cloudflare quick tunnel: free, no account, a new random *.trycloudflare.com
+  # name on every start. The server allows that pattern by default.
+  tunnel:
+    image: cloudflare/cloudflared:2026.9.1
+    profiles: ["tunnel"]
+    command:
+      ["tunnel", "--no-autoupdate", "--metrics", "0.0.0.0:2000", "--url", "http://server:8000"]
+    depends_on:
+      server:
+        condition: service_healthy
+
+  # --- tests (only with --profile test) -----------------------------------------
+  # docker compose --profile test run --rm tests
+  # A separate, throwaway Postgres: the tests create their own database and
+  # roles, and must never touch the demo's. No port is published.
+  testdb:
+    image: postgres:16
+    profiles: ["test"]
+    environment:
+      POSTGRES_PASSWORD: test
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 2s
+      timeout: 3s
+      retries: 30
+
+  tests:
+    build:
+      context: .
+      target: test
+    profiles: ["test"]
+    environment:
+      TEST_ADMIN_DATABASE_URL: postgresql://postgres:test@testdb:5432/postgres
+    depends_on:
+      testdb:
+        condition: service_healthy
