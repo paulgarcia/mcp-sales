@@ -1,5 +1,6 @@
 # Sales MCP server
 
+[![CI](https://github.com/paulgarcia/mcp-sales/actions/workflows/ci.yml/badge.svg)](https://github.com/paulgarcia/mcp-sales/actions/workflows/ci.yml)
 ![Python 3.12](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
 ![MCP 2026-07-28 + legacy](https://img.shields.io/badge/MCP-2026--07--28%20%2B%20legacy-6E56CF)
 ![PostgreSQL 16](https://img.shields.io/badge/PostgreSQL-16-4169E1?logo=postgresql&logoColor=white)
@@ -92,8 +93,8 @@ You need [Docker Desktop](https://www.docker.com/products/docker-desktop/),
 server never calls Claude; Claude calls the server.
 
 ```bash
-git clone https://github.com/paulgarcia/mcp-sales-draft.git
-cd mcp-sales-draft
+git clone https://github.com/paulgarcia/mcp-sales.git
+cd mcp-sales
 python scripts/init_env.py          # creates .env with random secrets
 docker compose up --build           # database + demo data + server
 ```
@@ -305,8 +306,8 @@ one for your system.
 ### 1. Get the code
 
 ```bash
-git clone https://github.com/paulgarcia/mcp-sales-draft.git
-cd mcp-sales-draft
+git clone https://github.com/paulgarcia/mcp-sales.git
+cd mcp-sales
 ```
 
 ### 2. Create `.env` with random secrets
